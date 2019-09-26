@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
     *env << "(RTSP-over-HTTP tunneling is not available.)\n";
   }
 
-  env->taskScheduler().doEventLoop(); // does not return
+  env->taskScheduler().doEventLoop(); // does not return 开始循环
 
   return 0; // only to prevent compiler warning
 }
