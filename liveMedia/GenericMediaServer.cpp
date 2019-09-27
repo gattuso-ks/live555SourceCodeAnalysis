@@ -91,7 +91,7 @@ GenericMediaServer
 ::GenericMediaServer(UsageEnvironment& env, int ourSocket, Port ourPort,
 		     unsigned reclamationSeconds)
   : Medium(env),
-    fServerSocket(ourSocket), fServerPort(ourPort), fReclamationSeconds(reclamationSeconds),
+    fServerSocket(ourSocket), fServerPort(ourPort), fReclamationSeconds(reclamationSeconds/*default 65*/),
     fServerMediaSessions(HashTable::create(STRING_HASH_KEYS)),
     fClientConnections(HashTable::create(ONE_WORD_HASH_KEYS)),
     fClientSessions(HashTable::create(STRING_HASH_KEYS)),

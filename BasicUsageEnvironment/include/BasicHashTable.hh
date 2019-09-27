@@ -64,7 +64,7 @@ private: // implementation of inherited pure virtual functions
   virtual unsigned numEntries() const;
 
 private:
-  class TableEntry {
+  class TableEntry {//key-value-pair
   public:
     TableEntry* fNext;
     char const* key;
