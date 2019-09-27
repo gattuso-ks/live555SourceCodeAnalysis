@@ -31,11 +31,11 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 // the table to increase the number of buckets
 #define REBUILD_MULTIPLIER 3
 
-BasicHashTable::BasicHashTable(int keyType)
+BasicHashTable::BasicHashTable(int keyType)//init with array of SMALL_HASH_TABLE_SIZE 
   : fBuckets(fStaticBuckets), fNumBuckets(SMALL_HASH_TABLE_SIZE),
     fNumEntries(0), fRebuildSize(SMALL_HASH_TABLE_SIZE*REBUILD_MULTIPLIER),
     fDownShift(28), fMask(0x3), fKeyType(keyType) {
-  for (unsigned i = 0; i < SMALL_HASH_TABLE_SIZE; ++i) {
+  for (unsigned i = 0; i < SMALL_HASH_TABLE_SIZE; ++i) {//init the small array
     fStaticBuckets[i] = NULL;
   }
 }
@@ -52,9 +52,12 @@ BasicHashTable::~BasicHashTable() {
   // Also free the bucket array, if it was dynamically allocated:
   if (fBuckets != fStaticBuckets) delete[] fBuckets;
 }
-
-void* BasicHashTable::Add(char const* key, void* value) {
-  void* oldValue;
+/*Add key-value-pair.
+  If the key is exist update the value and return oldvalue,
+  else insert a new pair and return NULL.
+  If the size is too large, rebuilt. 
+*/
+void* BasicHashTable::Add(char const* key, void* value) {  void* oldValue;
   unsigned index;
   TableEntry* entry = lookupKey(key, index);
   if (entry != NULL) {
@@ -72,7 +75,7 @@ void* BasicHashTable::Add(char const* key, void* value) {
 
   return oldValue;
 }
-
+/*Delete pair with key.*/
 Boolean BasicHashTable::Remove(char const* key) {
   unsigned index;
   TableEntry* entry = lookupKey(key, index);
@@ -82,7 +85,7 @@ Boolean BasicHashTable::Remove(char const* key) {
 
   return True;
 }
-
+/*Find the value with key.If not exist return NULL*/
 void* BasicHashTable::Lookup(char const* key) const {
   unsigned index;
   TableEntry* entry = lookupKey(key, index);
@@ -90,7 +93,7 @@ void* BasicHashTable::Lookup(char const* key) const {
 
   return entry->value;
 }
-
+/*Return number of pairs.*/
 unsigned BasicHashTable::numEntries() const {
   return fNumEntries;
 }
@@ -98,7 +101,7 @@ unsigned BasicHashTable::numEntries() const {
 BasicHashTable::Iterator::Iterator(BasicHashTable const& table)
   : fTable(table), fNextIndex(0), fNextEntry(NULL) {
 }
-
+/*Return value of next pair. The pamara key is the key of next key. */
 void* BasicHashTable::Iterator::next(char const*& key) {
   while (fNextEntry == NULL) {
     if (fNextIndex >= fTable.fNumBuckets) return NULL;
@@ -129,7 +132,7 @@ HashTable::Iterator* HashTable::Iterator::create(HashTable const& hashTable) {
 BasicHashTable::TableEntry* BasicHashTable
 ::lookupKey(char const* key, unsigned& index) const {
   TableEntry* entry;
-  index = hashIndexFromKey(key);
+  index = hashIndexFromKey(key);//Get index by key.
 
   for (entry = fBuckets[index]; entry != NULL; entry = entry->fNext) {
     if (keyMatches(key, entry->key)) break;
@@ -159,7 +162,7 @@ Boolean BasicHashTable
 BasicHashTable::TableEntry* BasicHashTable
 ::insertNewEntry(unsigned index, char const* key) {
   TableEntry* entry = new TableEntry();
-  entry->fNext = fBuckets[index];
+  entry->fNext = fBuckets[index];//Why there is not NULL
   fBuckets[index] = entry;
 
   ++fNumEntries;
