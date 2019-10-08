@@ -162,7 +162,7 @@ Boolean BasicHashTable
 BasicHashTable::TableEntry* BasicHashTable
 ::insertNewEntry(unsigned index, char const* key) {
   TableEntry* entry = new TableEntry();
-  entry->fNext = fBuckets[index];//Why there is not NULL
+  entry->fNext = fBuckets[index];
   fBuckets[index] = entry;
 
   ++fNumEntries;
